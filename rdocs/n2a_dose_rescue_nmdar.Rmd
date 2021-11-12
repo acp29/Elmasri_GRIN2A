@@ -1,0 +1,122 @@
+---
+title: "*grin2a* KO dose-dependent rescue with WT GluN2A: NMDA-EPSC peak and decay"
+output:
+  html_document: default
+  pdf_document: default
+---
+  
+**Document format**  
+Great tutorial for [R Markdown] (https://rmarkdown.rstudio.com/articles_intro.html)  
+R Markdown reports rely on three frameworks  
+* markdown for formatted text  
+* knitr for embedded R code  
+* YAML for render parameters  
+  
+**This analysis uses linear modelling**  
+  
+**Load package requirements**  
+```{r, echo=TRUE, message=FALSE, results='hide'}
+if (!require(package="tidyverse")) utils::install.packages("tidyverse")
+library(tidyverse) 
+if (!require(package="lme4")) utils::install.packages("lme4")
+library(lme4)  
+if (!require(package="lmerTest")) utils::install.packages("lmerTest")
+library(lmerTest)  
+if (!require(package="parameters")) utils::install.packages("parameters")
+library(parameters) 
+if (!require(package="car")) utils::install.packages("car")
+library(car)  
+if (!require(package="stats")) utils::install.packages("stats")
+library(stats)
+if (!require(package="pCalibrate")) utils::install.packages("pCalibrate")
+library(pCalibrate)
+if (!require(package="afex")) utils::install.packages("afex")
+library(afex)
+if (!require(package="emmeans")) utils::install.packages("emmeans")
+library(emmeans)
+if (!require(package="knitr")) utils::install.packages("knitr")
+library(knitr)
+if (!require(package="kableExtra")) utils::install.packages("kableExtra")
+library(kableExtra)
+```
+
+**Read text in from file**
+```{r}
+Data <- read.delim("../data/n2a_dose_rescue_nmdar.dat", header = TRUE)
+```
+
+**Factor encoding**
+```{r}  
+Data$dose <- as.factor(Data$dose)
+```
+
+**Set genotype WT and cre - as reference levels**
+```{r}
+Data$dose<- factor(Data$dose, levels=c("Unt","0","1.1","3.3","3.8","4.4","5.6","10.9"))
+#Data$doseinterpret_bf(1)factor(Data$dose, ordered = TRUE, levels=c("Unt","0","1.1","3.3","3.8","4.4","5.6","10.9"))
+```
+
+
+**Fit a linear model**
+```{r, results='asis'}  
+
+# Initialize
+variates <- c("peak","decay")
+l <- length(variates)
+
+for (i in 1:l) {
+  
+variates[i] -> resp
+  
+cat('\n\n\n# Analysis of',resp,'\n\n')
+    
+# Model fitting  
+formula <- sprintf("log(%s) ~ dose", resp)
+model <- lm(formula, data=Data) 
+
+# ANOVA table
+aov <- car::Anova(model, type = 3, test.statistic = "F")
+aov %>%
+  rename(p.value = "Pr(>F)") %>%
+  mutate(p.value = afex::round_ps_apa(p.value)) %>%
+  knitr::kable(caption = sprintf("**ANOVA table: %s**",resp), digits = 2) %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  print()
+
+# Checking model assumptions
+# Plot of standardized residuals to assess for outliers and homo/heteroskedasticity of residuals
+resid = residuals(model)
+plot(fitted(model),resid/sd(resid), 
+     main = sprintf("Residuals Plot: log%s",resp), 
+     xlab = "Fitted values", ylab = 
+       "Standardized Residuals")
+abline(h = 0)
+# Histogram to asses Normality of residuals
+hist(resid, col="darkgray", main = sprintf("Histogram of residuals: log%s",resp))
+# Normal Q-Q plot of the residuals
+qqnorm(resid, main = sprintf("Normal Q-Q Plot: log%s",resp))
+qqline(resid)  # Do the points fall nicely onto the line?
+
+# Extract model parameters and return them on the response scale 
+# After backtransforming to the response scale, the highlighted coefficients correspond to the fold change 
+# between mutant and WT 
+model_parameters(model, exponentiate = TRUE) %>%   
+  dplyr::select(-c(p,SE)) %>%
+  knitr::kable(caption = sprintf("**Model parameters (on the response scale) with 95%% confidence intervals: %s**",resp), digits = 2) %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  print()
+
+# Use emmmeans to obtain estimated marginal means from our model
+emm <- emmeans(model, ~ dose, tran = 'log', type = 'response')
+emm %>% 
+  as.data.frame() %>%
+  dplyr::select(-SE) %>%
+  knitr::kable(caption = sprintf("**Standardized effect sizes (Cohen's *d*) with marginal 95%% confidence intervals: %s**",resp), digits = 2) %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  print()
+
+}
+
+```
+
+
