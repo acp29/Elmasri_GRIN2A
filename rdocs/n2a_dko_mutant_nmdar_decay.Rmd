@@ -176,7 +176,7 @@ contr.orth %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
   print()
 
-# Fit full model (with orthogonal contrasts) optimizing the Maximum Likelihood criterion
+# Fit model (with orthogonal contrasts)
 contrasts(Data$mutation) <- contr.orth 
 attr(Data$mutation,"contrasts") %>%
   as.data.frame() %>%
