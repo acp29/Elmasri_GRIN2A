@@ -34,8 +34,6 @@ if (!require(package="bayestestR")) utils::install.packages("bayestestR")
 library(bayestestR) 
 if (!require(package="stats")) utils::install.packages("stats")
 library(stats)
-if (!require(package="MuMIn")) utils::install.packages("MuMIn")
-library(MuMIn)
 if (!require(package="pCalibrate")) utils::install.packages("pCalibrate")
 library(pCalibrate)
 if (!require(package="afex")) utils::install.packages("afex")
@@ -182,7 +180,7 @@ contr.orth %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
   print()
 
-# Fit full model (with orthogonal contrasts) optimizing the Maximum Likelihood criterion
+# Fit model (with orthogonal contrasts)
 contrasts(Data$mutation) <- contr.orth 
 attr(Data$mutation,"contrasts") %>%
   as.data.frame() %>%
@@ -200,82 +198,8 @@ attr(Data$transfection,"contrasts") %>%
   knitr::kable(caption = sprintf("**Matrix of contrasts on transfection: %s**",resp), digits = 2) %>% 
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
   print() 
-# Without random effects
-formula <- sprintf("log(%s) ~ mutation * transfection", resp)
-lm_model <- lm(formula, data = Data, na.action = "na.fail") 
-# With random effects
 formula <- sprintf("log(%s) ~ mutation * transfection + (1|animal/slice/pair)", resp)
-lmer_model <- lme4::lmer(formula, data = Data, REML = FALSE, control = settings, na.action = "na.fail") 
-# Compare models using information theory
-AIC(lm_model,lmer_model) %>% 
-  mutate(weight = exp(-0.5*(AIC-min(AIC)))) %>%
-  mutate(weight = weight/sum(weight)) %>%
-  knitr::kable(caption = sprintf("**Akaike information criterion (AIC) and Akaike weights for the full model with and without the random effects: %s**",resp), digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  print()
-BIC(lm_model,lmer_model) %>% 
-  mutate(weight = exp(-0.5*(BIC-min(BIC)))) %>%
-  mutate(weight = weight/sum(weight)) %>%
-  knitr::kable(caption = sprintf("**Bayesian information criterion (BIC) and Schwarz weights for the full model with and without the random effects: %s**",resp), digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  print()
-# Compare residual standard
-data.frame(sigma = c(sigma(lm_model), sigma(lmer_model)), row.names=c("lm_model","lmer_model"))  %>%
-  mutate(percent = 100*sigma/max(sigma)) %>%
-  knitr::kable(caption = sprintf("**Residual standard deviation for the full model with and without the random effects: %s**",resp), digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  print()
-# Assign lmer_model as model
-model <- lmer_model
-
-# Evaluate various other feasible models (with the different fixed effects) using information theory
-# Compare model adequacy using the Akaike Information Criterion (AIC) 
-# AIC represents the amount of information lost when we use a model to approximate reality.
-# The lower the value of AIC, the less the amount of information lost in using that model.
-model.eval1 <- dredge(model, rank = "AIC") %>% 
-  arrange(desc(df))
-model.eval1 %>%
-  as.data.frame() %>%
-  mutate_if(is.double, formatC, format='f',digits = 2) %>%
-  mutate_all(str_replace_all, pattern = "\\+", replacement = "\\\\+")  %>%  
-  knitr::kable(caption = sprintf("**Akaike information criterion (AIC) and Akaike weights for the various possible models: %s**",resp), digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  print()
-
-# The Bayesian Information Criterion (BIC) measures the degree of belief that a certain model
-# is the true data-generating model. The lower the value of BIC, the greater the belief.
-# The BIC puts a unit information prior prior on parameters, which can be thought of as a
-# prior distribution that contains the same amount of information as a single, typical 
-# observation. This prior is quite diffuse.
-model.eval2 <- dredge(model, rank = "BIC") %>% 
-  arrange(desc(df))
-model.eval2 %>%
-  as.data.frame() %>%
-  mutate_if(is.double, formatC, format='f',digits = 2) %>%
-  mutate_all(str_replace_all, pattern = "\\+", replacement = "\\\\+")  %>%  
-  knitr::kable(caption = sprintf("**Bayesian information criterion (BIC) and Schwarz weights for the various possible models: %s**",resp), digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  print()
-
-# Plot results of model evaluation
-pd <- position_dodge(0.33)
-p1 <- data.frame(cbind(model.eval1$df,model.eval1$weight,model.eval2$weight)) %>% 
-    as_tibble() %>%
-    rename(df="X1") %>%
-    rename(AIC="X2") %>%
-    rename(BIC="X3") %>%
-    pivot_longer(cols=2:3, names_to = "IC", values_to = "weight") %>%
-    ggplot(aes(x = df, y = weight, colour=IC, shape=IC)) +
-    geom_line(position = pd) +
-    geom_point(position = pd, size=4) +
-    ggtitle(sprintf("Model evaluation using Information Theory for: log(%s)", resp)) +
-    xlab("Model degrees of freedom") +
-    ylab("Weight") +
-    theme(legend.title = element_blank())
-grid.arrange(p1, nrow = 1, ncol = 1)
-
-# Update model to optimize the Restricted Maximum Likelihood criterion
-model <- update(model, REML = TRUE)
+model <- lme4::lmer(formula, data = Data, REML = TRUE, control = settings, na.action = "na.fail") 
 
 # Checking model assumptions
 resid = residuals(model)
