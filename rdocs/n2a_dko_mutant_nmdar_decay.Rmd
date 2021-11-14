@@ -1,18 +1,14 @@
 ---
-title: "GluN2A GOF mutant rescue in DKO: NMDA-EPSC decay"
+title: "GluN2A GOF mutant rescue in double KO (*grin2a* and *grin2b*): NMDA-EPSC decay"
 output:
   html_document: default
   pdf_document: default
 ---
   
-**Document format**  
-Great tutorial for [R Markdown] (https://rmarkdown.rstudio.com/articles_intro.html)  
-R Markdown reports rely on three frameworks  
-* markdown for formatted text  
-* knitr for embedded R code  
-* YAML for render parameters  
   
-**This analysis uses linear mixed modelling with restricted maximum likelihood (REML)**  
+**This document forms part of the data and code deposited at:**  
+https://github.com/acp29/Elmasri_GRIN2A
+  
   
 **Load package requirements**  
 ```{r, echo=TRUE, message=FALSE, results='hide'}

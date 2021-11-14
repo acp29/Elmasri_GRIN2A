@@ -5,14 +5,10 @@ output:
   pdf_document: default
 ---
   
-**Document format**  
-Great tutorial for [R Markdown] (https://rmarkdown.rstudio.com/articles_intro.html)  
-R Markdown reports rely on three frameworks  
-* markdown for formatted text  
-* knitr for embedded R code  
-* YAML for render parameters  
   
-**This analysis uses linear modelling**  
+**This document forms part of the data and code deposited at:**  
+https://github.com/acp29/Elmasri_GRIN2A
+  
   
 **Load package requirements**  
 ```{r, echo=TRUE, message=FALSE, results='hide'}
