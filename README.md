@@ -36,7 +36,7 @@ Units for peak, decay, charge, rise, dt50, fwhm, GluN1 and Homer1c are pA, ms, p
   GluN2A GOF mutant rescue in DKO: NMDA-EPSC decay  
   https://rpubs.com/acp29/835113  
 - n2a_mutant_imaging.Rmd: relates to Figures 3 and S1.3  
-  GluN1-SEP and Homer1c-tdTomato spine fluorescence when co-expressed with GluN2A mutants 
+  GluN1-SEP and Homer1c-tdTomato spine fluorescence when co-expressed with GluN2A mutants  
   https://rpubs.com/acp29/835101  
 - n2a_mutant.Rmd: relates to Figure 4, S4 and S1.4-1.7   
   GluN2A mutant rescue in *grin2a* knockout: EPSC properties   
