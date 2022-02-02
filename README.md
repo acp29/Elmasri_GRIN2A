@@ -1,5 +1,5 @@
 # Elmasri_GRIN2A
-Data and code for Elmasri et al. (202X)
+Data and code for Elmasri et al. (2022) Communications Biology
 
 ## Table of contents
 
