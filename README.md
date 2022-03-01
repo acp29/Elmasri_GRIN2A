@@ -1,5 +1,7 @@
 # Elmasri_GRIN2A
-Data and code for Elmasri et al. (2022) Communications Biology
+Data and code for:
+
+Elmasri M, Hunter DW, Winchester G, Bates EE, Aziz W, Van Der Does DM, Karachaliou E, Sakimura K, Penn AC.  (2022) Common synaptic phenotypes arising from diverse mutations in the human NMDA receptor subunit GluN2A. Commun Biol. 5(1):174. doi: 10.1038/s42003-022-03115-3.
 
 ## Table of contents
 
