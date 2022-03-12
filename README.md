@@ -9,7 +9,7 @@ Elmasri M, Hunter DW, Winchester G, Bates EE, Aziz W, Van Der Does DM, Karachali
 
 **./mdocs**
 - combiRec_IV.m: Analyses AMPA-EPSCs and NMDA-EPSC responses from an I-V experiment  
-- combiRec.m: Analyses NMDA-EPSCs measured +20 mV (in prescence of NBQX)  
+- combiRec.m: Analyses NMDA-EPSCs measured +20 mV (in presence of NBQX)  
 - ephysIO.m: Loads electrophysiology files  
 - wcp.m: Analysis of test pulse to calculate whole-cell recording properties  
 - rscomp.m: Off-line series resistance compensation  
