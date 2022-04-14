@@ -12,12 +12,12 @@ function out = combiRec(filepath, offset, makeplots, figID)
     R_s_final = 3e+06;                 % default is 3e+06 ohms (0 for 100% compensation)
     risetime_limits = [0.2, 0.5, 0.8]; % default is [0.2, 0.5, 0.8]
     set_mixed_peak_mean = 30;          % default is 30
-    set_nmda_peak_mean  = 300;          % default is 90
+    set_nmda_peak_mean  = 90;          % default is 90
     frac_decay_time = 0.5;             % default is 0.5
-    ampa_fwhm_scale_factor = 17;       % default is 10
-    nmda_fwhm_scale_factor = 5;       % default is 30 
-    ampa_delay = -0.000;                % default is 0 seconds
-    nmda_delay = -0.002;                % default is 0 seconds
+    ampa_fwhm_scale_factor = 10;       % default is 10
+    nmda_fwhm_scale_factor = 30;       % default is 30 
+    ampa_delay = 0.000;                % default is 0 seconds
+    nmda_delay = 0.000;                % default is 0 seconds
     
     % Preallocate output structure
     out = {};
