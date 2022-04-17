@@ -93,9 +93,11 @@ function out = combiRec(filepath, offset, makeplots, figID)
     end
 
     % Correct holding potential for LJP (offset)
-    holding = holding - offset
+    holding = holding - offset;
     ref = [-0.1,-0.08,-0.06,-0.04,-0.02,0.00,0.02];
     if sum(diff([holding;ref])) > 0
+        holding
+        warning('Unexpected holding potentials')
         chdir(pathref);
         return
     end
