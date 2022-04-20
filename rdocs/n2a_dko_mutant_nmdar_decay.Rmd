@@ -371,7 +371,7 @@ icc(model, by_group=TRUE, tolerance=0) %>%
 
 # 95% confidence intervals for interaction contrasts
 emm <- emmeans(model, ~ mutation * transfection, data = droppedData, tran = 'log', type = 'response')
-emm.interaction <- contrast(emm, method = "trt.vs.ctrl", interaction = TRUE, adjust = "none")
+emm.interaction <- contrast(emm, method = "pairwise", interaction = TRUE, adjust = "none")
 emm.interaction %>%
   confint() %>% 
   relocate(df, .before = ratio) %>%
