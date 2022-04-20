@@ -420,7 +420,7 @@ emm.interaction %>%
   mutate_at("maxBF", formatC, format='g',digits = 3) %>%
   mutate(p.value = afex::round_ps_apa(p.value)) %>%
   mutate(p.adj = afex::round_ps_apa(p.adj)) %>%
-  knitr::kable(caption = sprintf("**Hypothesis testing on interaction parameters (Dunnett's step-down p-value adjustment): %s**",resp), digits = 2) %>%
+  knitr::kable(caption = sprintf("**Hypothesis testing on interaction parameters (Westfall's step-wise p-value adjustment): %s**",resp), digits = 2) %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
   print()
 
