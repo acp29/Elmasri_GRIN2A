@@ -8,8 +8,8 @@ Elmasri M, Hunter DW, Winchester G, Bates EE, Aziz W, Van Der Does DM, Karachali
 ### Custom MATLAB functions used to analyse recording traces
 
 **./mdocs**
-- combiRec_IV.m: Analyses AMPA-EPSCs and NMDA-EPSC responses from an I-V experiment  
-- combiRec.m: Analyses NMDA-EPSCs measured +20 mV (in presence of NBQX)  
+- combiRec.m: Analyses AMPA-EPSCs and NMDA-EPSC responses from an I-V experiment  
+- NMDArec.m: Analyses NMDA-EPSCs measured +20 mV (in prescence of NBQX)  
 - ephysIO.m: Loads electrophysiology files  
 - wcp.m: Analysis of test pulse to calculate whole-cell recording properties  
 - rscomp.m: Off-line series resistance compensation  
